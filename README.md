@@ -21,5 +21,5 @@ These nifty scripts will install a working Arch Linux installation onto a USB wi
 git clone git@github.com:naelstrof/auto-usb-arch-scripts.git
 cd auto-usb-arch-scripts
 sudo su
-./install.sh /dev/sdb MyCoolComputer MyCoolName
+./install.sh /dev/sdb MyCoolComputerName
 ```
