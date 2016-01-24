@@ -4,7 +4,6 @@
 # /dev/sdb
 _drive=$1
 _name=$2
-_user=$3
 
 # /dev/sdb2
 _boot=${_drive}2
@@ -92,7 +91,7 @@ cp $(pwd)/configure.sh /mnt
 cp $(pwd)/visudo_editor.sh /mnt
 chmod +x /mnt/configure.sh
 chmod +x /mnt/visudo_editor.sh
-arch-chroot /mnt /configure.sh ${_drive} ${_name} ${_user}
+arch-chroot /mnt /configure.sh ${_drive} ${_name}
 rm /mnt/configure.sh
 rm /mnt/visudo_editor.sh
 # --------------------------------------------------------

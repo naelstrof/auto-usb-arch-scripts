@@ -6,7 +6,6 @@
 
 _drive=$1
 _name=$2
-_user=$3
 
 # Set up hostname
 echo ${_name} > /etc/hostname
@@ -43,10 +42,8 @@ sed -i 's/relatime/noatime/g' /etc/fstab
 # Finally we need some user input here, don't want to be passwordless
 echo "Setting root password..."
 passwd
-if [[ ! -z "${_user}" ]]; then
-    echo "Enter new user name:"
-    read _user
-fi
+echo "Enter new user name:"
+read _user
 useradd -m -g users -G wheel -s /bin/bash ${_user}
 echo "Setting ${_user}'s password:"
 echo "${_user} has sudo access."
