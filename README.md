@@ -1,5 +1,5 @@
 #Arch Linux USB Automatic Install Script
----------------------------------------
+
 These nifty scripts will install a working Arch Linux installation onto a USB with little to no intervention.
 
 ##Features
@@ -14,3 +14,12 @@ These nifty scripts will install a working Arch Linux installation onto a USB wi
 ## Issues
 
 * Parted doesn't automatically align partitions optimally, non-issue for USB's afaik.
+
+## Usage
+
+``` bash
+git clone git@github.com:naelstrof/auto-usb-arch-scripts.git
+cd auto-usb-arch-scripts
+sudo su
+./install.sh /dev/sdb MyCoolComputer MyCoolName
+```
