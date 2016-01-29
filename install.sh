@@ -4,6 +4,7 @@
 # /dev/sdb
 _drive=$1
 _name=$2
+_filesystem=$3
 
 # /dev/sdb2
 _boot=${_drive}2
@@ -31,7 +32,12 @@ fi
 if [[ -z "${_name}" ]]; then
     echo "Usage: ${0} /dev/sdX hostname [username]" 2>&1
     exit 1
+fi 
+
+if [[ -z "${_filetype}" ]]; then
+    _filetype="ext4"
 fi
+
 # make sure specified drive isn't mounted anywhere
 if [[ ! -z "$(cat /proc/mounts | grep ${_drive})" ]]; then
     echo "${_drive} must be unmounted before trying to run this!" 2>&1
@@ -60,7 +66,7 @@ parted --script ${_drive} -a optimal mkpart primary ext4 0M 5M
 # 2 efi and /boot
 parted --script ${_drive} -a optimal mkpart ESP fat32 5M ${_bootsize}
 # 3 /
-parted --script ${_drive} -a optimal mkpart primary ext4 ${_bootsize} 100%
+parted --script ${_drive} -a optimal mkpart primary ${_filesystem} ${_bootsize} 100%
 
 parted --script ${_drive} set 1 bios_grub on
 parted --script ${_drive} set 2 boot on
@@ -70,28 +76,46 @@ sync
 # mkfs ---------------------------------------------------
 # fat32 has no journaling I think
 mkfs.vfat -F 32 -n BOOT ${_boot}
-# -F forces ext4 to make a fs here
-mkfs.ext4 -F -O ^has_journal ${_root}
+# -f forces mkfs to make a fs here
+case ${_filesystem} in
+    "ext4")
+        mkfs.ext4 -f -O ^has_journal ${_root}
+    ;;
+    "btrfs")
+        mkfs.btrfs -f ${_root}
+    ;;
+    *)
+        echo "Error: Unknown filetype. Supported formats are ext4 and btrfs."
+        exit 1
+    ;;
+esac
+
 sync
+
 # --------------------------------------------------------
 
 # mount it -----------------------------------------------
-mount ${_root} /mnt
+if [[ "${_filesystem}" -eq "btrfs" ]]; then
+    mount ${_root} -o compress=lzo,noatime,ssd /mnt
+else
+    mount ${_root} -o ssd,noatime /mnt
+fi
 mkdir /mnt/boot
 mount ${_boot} /mnt/boot
 # --------------------------------------------------------
 
 # install it ---------------------------------------------
-pacstrap -c /mnt base base-devel gnome grub xf86-video-intel xf86-video-nouveau xf86-video-ati xf86-input-synaptics xf86-input-mouse xf86-input-keyboard vim efibootmgr
+pacstrap -c /mnt base base-devel gnome grub xf86-video-intel xf86-video-nouveau xf86-video-ati xf86-input-synaptics xf86-input-mouse xf86-input-keyboard vim efibootmgr btrfs-progs
 # --------------------------------------------------------
 
 # configure it -------------------------------------------
 genfstab -pU /mnt >> /mnt/etc/fstab
+#sed -i 's/relatime/compress=lzo,noatime,ssd/g' /mnt/etc/fstab
 cp $(pwd)/configure.sh /mnt
 cp $(pwd)/visudo_editor.sh /mnt
 chmod +x /mnt/configure.sh
 chmod +x /mnt/visudo_editor.sh
-arch-chroot /mnt /configure.sh ${_drive} ${_name}
+arch-chroot /mnt /configure.sh ${_drive} ${_name} ${_filesystem}
 rm /mnt/configure.sh
 rm /mnt/visudo_editor.sh
 # --------------------------------------------------------
