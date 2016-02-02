@@ -79,7 +79,7 @@ mkfs.vfat -F 32 -n BOOT ${_boot}
 # -f forces mkfs to make a fs here
 case ${_filesystem} in
     "ext4")
-        mkfs.ext4 -f -O ^has_journal ${_root}
+        mkfs.ext4 -F -O ^has_journal ${_root}
     ;;
     "btrfs")
         mkfs.btrfs -f ${_root}
