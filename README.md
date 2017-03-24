@@ -23,7 +23,7 @@ These nifty scripts will install a working Arch Linux installation onto a USB wi
 
 ## Prerequisites
 
-There is no prerequisites, the script will automatically install any needed.
+You'll need to be running on a linux machine with pacman. (Usually Arch Linux or some derivative.)
 
 ## Installation
 
