@@ -13,9 +13,9 @@ These nifty scripts will install a working Arch Linux installation onto a USB wi
 
 ## Practical Usage
 
-Get around security features on public computers by booting into your own linux installation.
-Create a easy throw-away dual boot stick, as a rescue disk, or for quick school work.
-Quickly manufacture multiple arch sticks with Dota 2 installed and have a portable lan-party at some public computers.
+* Get around security features on public computers by booting into your own linux installation.
+* Create a easy throw-away dual boot stick, as a rescue disk, or for quick school work.
+* Quickly manufacture multiple arch sticks with Dota 2 installed and have a portable lan-party at some public computers.
 
 ## Issues
 
@@ -28,6 +28,7 @@ There is no prerequisites, the script will automatically install any needed.
 ## Installation
 
 **Make sure you follow instructions exactly!**
+
 You can't just sudo the script, since it does some goofy piping and editor magic.
 
 ``` bash
@@ -38,3 +39,5 @@ sudo su
 ```
 
 You'll eventually be prompted for a username and password.
+
+Also, there's no need to run configure.sh.
