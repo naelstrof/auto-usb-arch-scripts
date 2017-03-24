@@ -6,7 +6,6 @@
 
 _drive=$1
 _name=$2
-_filesystem=$3
 
 _journalsize=8M
 
@@ -49,22 +48,6 @@ useradd -m -g users -G wheel -s /bin/bash ${_user}
 echo "Setting ${_user}'s password:"
 echo "${_user} has sudo access."
 passwd ${_user}
-
-if [[ "${_filesystem}" -eq "btrfs" ]]; then
-    # Set max journal size
-    echo "SystemMaxUse=${_journalsize}" >> /etc/systemd/journald.conf
-
-    # Disable CoW on journal location
-    mv /var/log /var/log_old
-    mkdir -p /var/log
-    chattr +C /var/log
-    cp -a /var/log_old/* /var/log
-    rm -rf /var/log_old
-
-    # Finally lets make a snapshot if we're btrfs
-    mkdir -p /snapshots
-    btrfs subvolume snapshot / /snapshots/fresh_system_$(date +%s).snap
-fi
 
 echo "Configuration complete."
 

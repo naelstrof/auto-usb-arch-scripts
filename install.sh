@@ -4,7 +4,6 @@
 # /dev/sdb
 _drive=$1
 _name=$2
-_filesystem=$3
 
 # /dev/sdb2
 _boot=${_drive}2
@@ -66,7 +65,7 @@ parted --script ${_drive} -a optimal mkpart primary ext4 0M 5M
 # 2 efi and /boot
 parted --script ${_drive} -a optimal mkpart ESP fat32 5M ${_bootsize}
 # 3 /
-parted --script ${_drive} -a optimal mkpart primary ${_filesystem} ${_bootsize} 100%
+parted --script ${_drive} -a optimal mkpart primary ext4 ${_bootsize} 100%
 
 parted --script ${_drive} set 1 bios_grub on
 parted --script ${_drive} set 2 boot on
@@ -76,36 +75,21 @@ sync
 # mkfs ---------------------------------------------------
 # fat32 has no journaling I think
 mkfs.vfat -F 32 -n BOOT ${_boot}
-# -f forces mkfs to make a fs here
-case ${_filesystem} in
-    "ext4")
-        mkfs.ext4 -F -O ^has_journal ${_root}
-    ;;
-    "btrfs")
-        mkfs.btrfs -f ${_root}
-    ;;
-    *)
-        echo "Error: Unknown filetype. Supported formats are ext4 and btrfs."
-        exit 1
-    ;;
-esac
+# -F forces mkfs to make a fs here
+mkfs.ext4 -F -O ^has_journal ${_root}
 
 sync
 
 # --------------------------------------------------------
 
 # mount it -----------------------------------------------
-if [[ "${_filesystem}" -eq "btrfs" ]]; then
-    mount ${_root} -o compress=lzo,noatime,ssd /mnt
-else
-    mount ${_root} -o ssd,noatime /mnt
-fi
+mount ${_root} -o noatime /mnt
 mkdir /mnt/boot
 mount ${_boot} /mnt/boot
 # --------------------------------------------------------
 
 # install it ---------------------------------------------
-pacstrap -c /mnt base base-devel gnome grub xf86-video-intel xf86-video-nouveau xf86-video-ati xf86-input-synaptics xf86-input-mouse xf86-input-keyboard vim efibootmgr btrfs-progs
+pacstrap -c /mnt base base-devel gnome grub xf86-video-intel xf86-video-nouveau xf86-video-ati xf86-input-synaptics xf86-input-mouse xf86-input-keyboard vim efibootmgr intel-ucode
 # --------------------------------------------------------
 
 # configure it -------------------------------------------
@@ -115,7 +99,7 @@ cp $(pwd)/configure.sh /mnt
 cp $(pwd)/visudo_editor.sh /mnt
 chmod +x /mnt/configure.sh
 chmod +x /mnt/visudo_editor.sh
-arch-chroot /mnt /configure.sh ${_drive} ${_name} ${_filesystem}
+arch-chroot /mnt /configure.sh ${_drive} ${_name}
 rm /mnt/configure.sh
 rm /mnt/visudo_editor.sh
 # --------------------------------------------------------
