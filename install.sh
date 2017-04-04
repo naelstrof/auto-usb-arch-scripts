@@ -24,12 +24,12 @@ fi
 # make sure drive exists
 if [[ ! -b "${_drive}" ]]; then
     echo "Block device ${_drive} not found, or is not a block device!" 2>&1
-    echo "Usage: ${0} /dev/sdX hostname [username]" 2>&1
+    echo "Usage: ${0} /dev/sdX hostname" 2>&1
     exit 1
 fi
 # make sure _name exists
 if [[ -z "${_name}" ]]; then
-    echo "Usage: ${0} /dev/sdX hostname [username]" 2>&1
+    echo "Usage: ${0} /dev/sdX hostname" 2>&1
     exit 1
 fi 
 
@@ -89,7 +89,7 @@ mount ${_boot} /mnt/boot
 # --------------------------------------------------------
 
 # install it ---------------------------------------------
-pacstrap -c /mnt base base-devel gnome grub xf86-video-intel xf86-video-nouveau xf86-video-ati xf86-input-synaptics xf86-input-mouse xf86-input-keyboard vim efibootmgr intel-ucode
+pacstrap -c /mnt base base-devel gnome grub xf86-video-intel xf86-video-nouveau xf86-video-ati xf86-input-synaptics xf86-input-mouse xf86-input-keyboard vim efibootmgr intel-ucode networkmanager
 # --------------------------------------------------------
 
 # configure it -------------------------------------------
