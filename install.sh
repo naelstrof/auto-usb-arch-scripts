@@ -8,7 +8,7 @@ _name=$2
 # /dev/sdb2
 _boot=${_drive}2
 # EFI folder tends to require ~50mb
-_bootsize=80M
+_bootsize=4G
 # /dev/sdb3
 _root=${_drive}3
 # --------------------------------------------------------
@@ -89,7 +89,7 @@ mount ${_boot} /mnt/boot
 # --------------------------------------------------------
 
 # install it ---------------------------------------------
-pacstrap -c /mnt base base-devel gnome grub xf86-video-intel xf86-video-nouveau xf86-video-ati xf86-input-synaptics xf86-input-mouse xf86-input-keyboard vim efibootmgr intel-ucode networkmanager
+pacstrap -c /mnt base base-devel gnome grub xf86-video-intel xf86-video-nouveau xf86-video-ati xf86-input-synaptics xf86-input-mouse xf86-input-keyboard vim efibootmgr intel-ucode networkmanager linux mkinitcpio
 # --------------------------------------------------------
 
 # configure it -------------------------------------------
