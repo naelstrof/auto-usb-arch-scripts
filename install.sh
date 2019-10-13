@@ -89,7 +89,7 @@ mount ${_boot} /mnt/boot
 # --------------------------------------------------------
 
 # install it ---------------------------------------------
-pacstrap -c /mnt base base-devel gnome grub xf86-video-intel xf86-video-nouveau xf86-video-ati xf86-input-synaptics xf86-input-mouse xf86-input-keyboard vim efibootmgr intel-ucode networkmanager linux mkinitcpio
+pacstrap -c /mnt base base-devel gnome grub xf86-video-intel xf86-video-nouveau xf86-video-ati xf86-input-synaptics xf86-input-mouse xf86-input-keyboard vim efibootmgr intel-ucode networkmanager linux linux-headers linux-firmware mkinitcpio
 # --------------------------------------------------------
 
 # configure it -------------------------------------------
