@@ -25,7 +25,7 @@ These nifty scripts will install a working Arch Linux installation onto a USB wi
 
 You'll need to be running on a linux machine with pacman. (Usually Arch Linux or some derivative.)
 
-## Installation
+## Installation/Usage
 
 **Make sure you follow instructions exactly!**
 
@@ -39,5 +39,7 @@ sudo su
 ```
 
 You'll eventually be prompted for a username and password.
+
+**WARNING**: If you have swap mounted on the computer you run this script on, you'll have to remove it from the /etc/fstab in order for it to boot on other systems.
 
 Also, there's no need to run configure.sh.
